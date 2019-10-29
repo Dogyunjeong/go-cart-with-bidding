@@ -7,7 +7,7 @@ static_resources:
   listeners:
   - name: listener_0
     address:
-      socket_address: { address: 0.0.0.0, port_value: 9090 }
+      socket_address: { address: 0.0.0.0, port_value: 8080 }
     filter_chains:
     - filters:
       - name: envoy.http_connection_manager
@@ -22,7 +22,7 @@ static_resources:
               routes:
               - match: { prefix: "/" }
                 route:
-                  cluster: ping_pong_service
+                  cluster: echo_service
                   max_grpc_timeout: 0s
               cors:
                 allow_origin:
@@ -36,19 +36,9 @@ static_resources:
           - name: envoy.cors
           - name: envoy.router
   clusters:
-  - name: ping_pong_service
-    connect_timeout: 5s
+  - name: echo_service
+    connect_timeout: 0.25s
     type: logical_dns
     http2_protocol_options: {}
-    # lb_policy: round_robin
-    # hosts: [{ socket_address: { address: host.docker.internal, port_value: 8080 }}]
-    lb_policy: ROUND_ROBIN
-    load_assignment:
-      cluster_name: ping_pong_service
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: host.docker.internal
-                port_value: 8080
+    lb_policy: round_robin
+    hosts: [{ socket_address: { address: localhost, port_value: 9090 }}]

@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  # go-server:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./Dockerfile
+  #   image: test/go-server
+  #   ports:
+  #     - "9090:9090"
+  envoy:
+    build:
+      context: ./envoy
+      dockerfile: Dockerfile
+    image: dev_envoy
+    container_name: dev_envoy
+    network_mode: host
+    # networks:
+    #   - network_1
+    ports:
+      - "8080:8080"
+      - "9901:9901"
+    # links:
+    #   - go-server
+# networks:
+#   network_1:
+#     driver: bridge

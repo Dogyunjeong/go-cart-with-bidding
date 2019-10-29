@@ -2,24 +2,26 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const { PingPongServiceClient } = require('./ping_pong_grpc_web_pb');
-const { PingRequest, PongResponse } = require('./ping_pong_pb.js');
+const {HelloRequest, RepeatHelloRequest,
+  HelloReply} = require('./helloworld_pb.js');
+const {GreeterClient} = require('./helloworld_grpc_web_pb.js');
 
-var client = new PingPongServiceClient('http://192.168.99.100:9090', null, null);
+// var client = new GreeterClient('http://192.168.99.100:8080', null, null);
+var client = new GreeterClient('http://localhost:8080', null, null);
 
 const App: React.FC = () => {
   const [ping, setPing] = useState(0)
 
   const handleClickPing = () => {
-    const request = new PingRequest();
-    request.setPing('Ping');
+    const request = new HelloRequest();
+    request.setName('hello')
 
 
-    client.pingPong(request, {}, (err: any, response: any) => {
+    client.sayHello(request, {}, (err: any, response: any) => {
       if (response == null) {
         console.log('grpc erro: ', err)
       }else {
-        console.log('grpc success:', response.getPong())
+        console.log('grpc success:')
       }
     })
   }
